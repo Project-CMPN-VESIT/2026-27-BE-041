@@ -58,7 +58,15 @@ Usage:
 
 from __future__ import annotations
 
-TITLE = "FEDERATED ALGORITHM COMPARISON - HISTORICAL MEASUREMENTS"
+# FEDPROX SECTION (2026-10-03): printed below the historical table, under its
+# own header, because it was measured at a different configuration and must
+# not be read as more rows of the same table. Unlike the constants below, its
+# numbers are parsed at run time from docs/IMPLEMENTATION_NOTES.md by
+# scripts/fedprox_table.py (stdlib only - no torch import, startup cost still
+# near zero); this script only prints what that module renders.
+from fedprox_table import render_lines as render_fedprox_lines
+
+TITLE ="FEDERATED ALGORITHM COMPARISON - HISTORICAL MEASUREMENTS"
 
 # Every row below was measured before the sigma and fusion-head changes
 # (DP_NOISE_MULTIPLIER 1.0 -> 0.75, FUSION_HIDDEN_DIM 256 -> 56) and has not
@@ -145,6 +153,10 @@ def main() -> int:
         print(_fmt_row(row))
     print(" " + "-" * (width - 2))
     print("=" * width)
+
+    # Separate section, separate configuration - see the import comment above.
+    print()
+    print("\n".join(render_fedprox_lines(local_note_first=True)))
     return 0
 
 
